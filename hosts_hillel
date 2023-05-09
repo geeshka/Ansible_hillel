@@ -1,0 +1,4 @@
+[hillel]
+
+ubuntuhillel                        ansible_host=192.168.88.206 ansible_user=geeshka
+ubuntu-0                            ansible_connection=docker

@@ -1,0 +1,27 @@
+---
+- hosts: all
+  vars:
+    server_name: "{{ ansible_fqdn }}"
+    virtualization_type: "{{ ansible_virtualization_type }}"
+    package_manager: "{{ ansible_pkg_mgr }}"
+  tasks:
+    - name: install nginx
+      apt: name=nginx state=latest
+    - name: start nginx
+      service:
+          name: nginx
+          state: started
+    - name: create nginx config file
+      ansible.builtin.template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/sites-available/default
+        mode: '0644'
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+    - ansible.builtin.shell: nginx -v
+      register: nginx_version
+    - name: nginx version
+      ansible.builtin.debug:
+        var: nginx_version

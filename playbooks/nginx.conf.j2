@@ -1,0 +1,14 @@
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    server_name {{ server_name }};
+
+    root /var/www/html;
+
+    index index.html;
+
+    location / {
+        return 200 "Hostname: {{ server_name }}\nVirtualization type: {{ virtualization_type }}\nPackage manager: {{ package_manager }}\n";
+    }
+}
