@@ -1,0 +1,2 @@
+geeshka@mayday:/etc/ansible$ ansible-playbook -i hosts_hillel /etc/ansible/playbooks/nginx.yml
+
