@@ -1,0 +1,6 @@
+version: "3"
+services:
+  ubuntu:
+    image: ubuntu:latest
+    container_name: ubuntu-0
+    command: tail -f /dev/null
