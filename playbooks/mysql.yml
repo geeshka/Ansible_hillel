@@ -1,0 +1,6 @@
+---
+- name: Install MySQL using role
+  hosts: ubuntuhillel
+  become: true
+  roles:
+    - mysql

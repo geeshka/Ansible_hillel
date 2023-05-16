@@ -1,0 +1,16 @@
+---
+- name: Install MySQL using dynamic role
+  hosts: ubuntuhillel
+  become: true
+  tasks:
+    - name: Print a message
+      ansible.builtin.debug:
+        msg: "this task runs before the mysql role"
+
+    - name: Include the mysql role
+      include_role:
+        name: mysql
+
+    - name: Print a message
+      ansible.builtin.debug:
+        msg: "this task runs after the mysql role"

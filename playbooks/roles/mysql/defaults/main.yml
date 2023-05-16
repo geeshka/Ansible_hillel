@@ -1,0 +1,6 @@
+---
+mysql_root_password: "qwerty1234"
+mysql_db: "ansible"
+mysql_user: "ansible"
+mysql_password: "ansible"
+

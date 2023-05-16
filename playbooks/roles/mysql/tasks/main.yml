@@ -1,0 +1,73 @@
+---
+- name: Install pip
+  apt:
+    name: python3-pip
+    state: present
+
+- name: Install PyMySQL
+  pip:
+    name: pymysql
+    state: present
+- name: Install MySQL
+  apt:
+    name: mysql-server
+    state: present
+  notify:
+    - Restart MySQL
+- name: Copy my.cnf global MySQL configuration.
+  ansible.builtin.template:
+    src: mysqld.cnf.j2
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+    owner: root
+    group: root
+    mode: 0644
+  notify: 
+    - Restart MySQL
+
+- name: Set the root password
+  mysql_user:
+    name: root
+    password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Remove all anonymous user accounts
+  mysql_user:
+    name: ''
+    host_all: yes
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Remove the MySQL test database
+  mysql_db:
+    name: test
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Creates database Ansible
+  mysql_db:
+    name: "{{ mysql_db }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Create MySQL user for Ansible
+  mysql_user:
+    name: "{{ mysql_user }}"
+    password: "{{ mysql_password }}"
+    priv: "{{ mysql_db }}.*:ALL"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Start MySQL service
+  service:
+    name: mysql
+    state: started
+
+- name: Enable MySQL service
+  service:
+    name: mysql
+    enabled: yes
+

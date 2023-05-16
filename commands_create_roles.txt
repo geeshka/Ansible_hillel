@@ -1,0 +1,169 @@
+ansible-galaxy init mysql-role
+ansible-playbook -i hosts_hillel /etc/ansible/playbooks/mysql.yml
+PLAY [Install MySQL using role] ***********************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Install pip] ****************************************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Install PyMySQL] ************************************************************************************************************************************************************************************
+changed: [ubuntuhillel]
+
+TASK [mysql : Install MySQL] **************************************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Copy my.cnf global MySQL configuration.] ************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : set the root password] ******************************************************************************************************************************************************************************
+changed: [ubuntuhillel]
+
+TASK [mysql : Remove all anonymous user accounts] *****************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Remove the MySQL test database] *********************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Creates database Ansible] ***************************************************************************************************************************************************************************
+changed: [ubuntuhillel]
+
+TASK [mysql : Create MySQL user for Ansible] **********************************************************************************************************************************************************************
+changed: [ubuntuhillel]
+
+TASK [mysql : Start MySQL service] ********************************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Enable MySQL service] *******************************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+PLAY RECAP ********************************************************************************************************************************************************************************************************
+ubuntuhillel               : ok=12   changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0  
+root@ubuntuhillel:~# systemctl status mysql
+● mysql.service - MySQL Community Server
+     Loaded: loaded (/lib/systemd/system/mysql.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2023-05-16 20:00:10 UTC; 8min ago
+   Main PID: 25405 (mysqld)
+     Status: "Server is operational"
+      Tasks: 38 (limit: 1018)
+     Memory: 231.6M
+        CPU: 5.722s
+     CGroup: /system.slice/mysql.service
+             └─25405 /usr/sbin/mysqld
+
+May 16 20:00:09 ubuntuhillel systemd[1]: Starting MySQL Community Server...
+May 16 20:00:10 ubuntuhillel systemd[1]: Started MySQL Community Server.
+root@ubuntuhillel:~# mysql -u ansible -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 15
+Server version: 8.0.33-0ubuntu0.22.10.2 (Ubuntu)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+mysql> show databases; 
++--------------------+
+| Database           |
++--------------------+
+| ansible            |
+| information_schema |
+| performance_schema |
++--------------------+
+3 rows in set (0.00 sec)
+
+mysql> use ansible;
+Database changed
+mysql> show tables;
+Empty set (0.00 sec)
+root@ubuntuhillel:~# mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 20
+Server version: 8.0.33-0ubuntu0.22.10.2 (Ubuntu)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> SELECT user FROM mysql.user;
++------------------+
+| user             |
++------------------+
+| ansible          |
+| debian-sys-maint |
+| mysql.infoschema |
+| mysql.session    |
+| mysql.sys        |
+| root             |
++------------------+
+6 rows in set (0.00 sec)
+
+mysql
+
+
+#####################################################################USE dynamic roles############################################################################
+
+geeshka@mayday:/etc/ansible$ ansible-playbook -i hosts_hillel /etc/ansible/playbooks/mysql_dynamic.yml 
+
+PLAY [Install MySQL using dynamic role] ***************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [Print a message] ********************************************************************************************************************************************************************************************
+ok: [ubuntuhillel] => {
+    "msg": "this task runs before the mysql role"
+}
+
+TASK [Include the mysql role] *************************************************************************************************************************************************************************************
+
+TASK [mysql : Install pip] ****************************************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Install PyMySQL] ************************************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Install MySQL] **************************************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Copy my.cnf global MySQL configuration.] ************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Set the root password] ******************************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Remove all anonymous user accounts] *****************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Remove the MySQL test database] *********************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Creates database Ansible] ***************************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Create MySQL user for Ansible] **********************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Start MySQL service] ********************************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [mysql : Enable MySQL service] *******************************************************************************************************************************************************************************
+ok: [ubuntuhillel]
+
+TASK [Print a message] ********************************************************************************************************************************************************************************************
+ok: [ubuntuhillel] => {
+    "msg": "this task runs after the mysql role"
+}
+
+PLAY RECAP ********************************************************************************************************************************************************************************************************
+ubuntuhillel               : ok=14   changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
