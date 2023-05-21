@@ -1,0 +1,22 @@
+galaxy_info:
+  author: geeshka
+  description: Install mysql as a docker container
+  company: ACME LLC
+
+  license: license (MIT)
+
+  min_ansible_version: 1.2
+
+  platforms:
+
+  - name: Ubuntu
+    versions:
+    - all
+  - name: Debian
+    versions:
+    - all
+
+  galaxy_tags:
+    - mysql
+
+dependencies: []

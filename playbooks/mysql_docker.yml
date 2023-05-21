@@ -1,0 +1,8 @@
+---
+- hosts: ubuntuhillel
+  become: true
+  vars_files:
+    - /etc/ansible/playbooks/roles/mysql-docker/vars/main.yml
+
+  roles:
+    - mysql-docker
